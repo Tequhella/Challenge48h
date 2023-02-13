@@ -108,18 +108,19 @@ int main()
         {
             healthBar.setFillColor(Color::Black);
             gameOverText.setString("Why are you geh ?");
-            background.setScale(Vector2f(1, 1));
+            background.setScale(Vector2f(3, 3));
         }
 
         // Dessiner les objets
         window.clear();
+        window.draw(background);
         window.draw(ignoreButton);
         window.draw(ignoreText);
         window.draw(helpButton);
         window.draw(helpText);
         window.draw(healthBar);
         window.draw(gameOverText);
-        window.draw(background);
+        
         window.display();
     }
 
