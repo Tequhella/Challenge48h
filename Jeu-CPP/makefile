@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -Wextra -Werror
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:src/%.cpp=obj/%.o)
