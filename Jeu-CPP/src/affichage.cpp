@@ -3,7 +3,8 @@
 Affichage::Affichage()
 {
     // Créer la fenêtre
-    window = new RenderWindow(VideoMode(800, 600), "Jeu-CPP");
+    window = new RenderWindow(VideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE), "Jeu-CPP");
+    window->setFramerateLimit(60);
 
     // Créer les boutons
     ignoreButton = RectangleShape(Vector2f(200, 50));
@@ -53,9 +54,12 @@ Affichage::Affichage()
     {
         exit(1);
     }
-    solSprite = Sprite(sol);
-    solSprite.setPosition(Vector2f(0, 400));
-    solSprite.setScale(Vector2f(0, 0));
+    for (int i = 0; i < 5; i++)
+    {
+        solSprite.push_back(Sprite(sol));
+        solSprite[i].setPosition(Vector2f(i * 800, 400));
+        solSprite[i].setScale(Vector2f(0, 0));
+    }
 
     // Mur
     if (!mur.loadFromFile("mur.png"))
@@ -72,7 +76,7 @@ Affichage::Affichage()
         exit(1);
     }
     toiSprite = Sprite(toi);
-    toiSprite.setPosition(Vector2f(0, solSprite.getPosition().y - 100));
+    toiSprite.setPosition(Vector2f(LARGEUR_FENETRE / 2 - 95, solSprite[0].getPosition().y - 95));
     toiSprite.setScale(Vector2f(0, 0));
     
     if (!sdf.loadFromFile("sdf.png"))
@@ -82,11 +86,34 @@ Affichage::Affichage()
     sdfSprite = Sprite(sdf);
     sdfSprite.setPosition(Vector2f(0, 0));
     sdfSprite.setScale(Vector2f(0, 0));
+    
+    string nomFichier;
+    for (int i = 0; i < 5; i++)
+    {
+        nomFichier = "maison" + to_string(i) + ".png";
+        Texture* tempTexture = new Texture();
+        if (!tempTexture->loadFromFile(nomFichier))
+        {
+            exit(1);
+        }
+        Sprite tempSprite;
+        maisonSprites.push_back(tempSprite);
+        maisonSprites[i].setTexture(*tempTexture);
+        // doit toucher le sol dynamiquement
+        maisonSprites[i].setPosition(Vector2f(i * 800, solSprite[0].getPosition().y- 150));
+        maisonSprites[i].setScale(Vector2f(0, 0));
+    }
+
+    maisonSprites[0].setPosition(Vector2f(-100, solSprite[0].getPosition().y - 550));
+    maisonSprites[2].setPosition(Vector2f(1600, solSprite[0].getPosition().y - 200));
+    maisonSprites[3].setPosition(Vector2f(2400, solSprite[0].getPosition().y - 300));
+    maisonSprites[4].setPosition(Vector2f(3200, solSprite[0].getPosition().y - 350));
 }
 
 Affichage::~Affichage()
 {
     delete window;
+    maisonSprites.clear();
 }
 
 void Affichage::afficherMenu()
@@ -159,10 +186,21 @@ void Affichage::afficherTerrainDeJeu()
     Time time;
 
     background.setScale(Vector2f(1, 1));
-    solSprite.setScale(Vector2f(1, 1));
     murSprite.setScale(Vector2f(1, 1));
     toiSprite.setScale(Vector2f(1, 1));
     sdfSprite.setScale(Vector2f(1, 1));
+
+    for (unsigned int i = 0; i < solSprite.size(); i++)
+    {
+        solSprite[i].setScale(Vector2f(1, 1));
+    }
+
+    for (unsigned int i = 0; i < maisonSprites.size() - 1; i++)
+    {
+        maisonSprites[i].setScale(Vector2f(0.2, 0.2));
+    }
+
+    maisonSprites[4].setScale(Vector2f(0.75, 0.75));
 
     // Afficher le terrain de jeu
     while (!isSDFMenuOpen)
@@ -182,30 +220,36 @@ void Affichage::afficherTerrainDeJeu()
         // Gestion du déplacement de Toi
         if (Keyboard::isKeyPressed(Keyboard::Left))
         {
-            if (toiSprite.getScale().x == -1)
-                toiSprite.setPosition(Vector2f(toiSprite.getPosition().x - 144, toiSprite.getPosition().y));
-            toiSprite.setScale(Vector2f(1, 1));
-            toiSpritePositionY = 2;
-            toiSprite.move(-0.5, 0);
-            if (clock.getElapsedTime().asMilliseconds() > 100)
+            if (toiSprite.getPosition().x >= maisonSprites[0].getGlobalBounds().left + maisonSprites[0].getGlobalBounds().width)
             {
-                toiSpritePositionX++;
-                toiSpritePositionX %= 6;
-                clock.restart();
+                if (toiSprite.getScale().x == -1)
+                    toiSprite.setPosition(Vector2f(toiSprite.getPosition().x - 144, toiSprite.getPosition().y));
+                toiSprite.setScale(Vector2f(1, 1));
+                toiSpritePositionY = 2;
+                moveDecors(5, 0);
+                if (clock.getElapsedTime().asMilliseconds() > 100)
+                {
+                    toiSpritePositionX++;
+                    toiSpritePositionX %= 6;
+                    clock.restart();
+                }
             }
         }
         if (Keyboard::isKeyPressed(Keyboard::Right))
         {
-            if (toiSprite.getScale().x == 1)
-                toiSprite.setPosition(Vector2f(toiSprite.getPosition().x + 144, toiSprite.getPosition().y));
-            toiSprite.setScale(Vector2f(-1, 1));
-            toiSpritePositionY = 2;
-            toiSprite.move(0.5, 0);
-            if (clock.getElapsedTime().asMilliseconds() > 100)
+            if (toiSprite.getPosition().x <= maisonSprites[4].getGlobalBounds().left)
             {
-                toiSpritePositionX++;
-                toiSpritePositionX %= 6;
-                clock.restart();
+                if (toiSprite.getScale().x == 1)
+                    toiSprite.setPosition(Vector2f(toiSprite.getPosition().x + 144, toiSprite.getPosition().y));
+                toiSprite.setScale(Vector2f(-1, 1));
+                toiSpritePositionY = 2;
+                moveDecors(-5, 0);
+                if (clock.getElapsedTime().asMilliseconds() > 100)
+                {
+                    toiSpritePositionX++;
+                    toiSpritePositionX %= 6;
+                    clock.restart();
+                }
             }
         }
 
@@ -232,11 +276,16 @@ void Affichage::afficherTerrainDeJeu()
 
         window->clear();
         //window->draw(background);
-        window->draw(solSprite);
         //window->draw(murSprite);
-        window->draw(toiSprite);
         //window->draw(sdfSprite);
-        //window->draw(karmaBar);
+        window->draw(karmaBar);
+
+        for (unsigned int i = 0; i < solSprite.size(); i++)
+            window->draw(solSprite[i]);
+        for (unsigned int i = 0; i < maisonSprites.size(); i++)
+            window->draw(maisonSprites[i]);
+
+        window->draw(toiSprite);
         window->display();
     }
 }
@@ -309,3 +358,19 @@ void Affichage::afficherKarmaBar()
     window->display();
 }
 
+void Affichage::moveDecors(float x, float y)
+{
+    for (unsigned int i = 0; i < solSprite.size(); i++)
+    {
+        solSprite[i].move(x, y);
+    }
+
+    for (unsigned int i = 0; i < maisonSprites.size(); i++)
+    {
+        maisonSprites[i].move(x, y);
+    }
+
+    //murSprite.move(x, y);
+    //toiSprite.move(x, y);
+    //sdfSprite.move(x, y);
+}

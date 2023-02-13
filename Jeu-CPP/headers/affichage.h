@@ -7,6 +7,9 @@
 #include <cmath>
 #include <iostream>
 
+#define LARGEUR_FENETRE 800
+#define HAUTEUR_FENETRE 600
+
 using namespace std;
 using namespace sf;
 
@@ -34,6 +37,8 @@ class Affichage
         void afficherKarmaBar();
         void afficherSDFMenu();
         void afficherTerrainDeJeu();
+
+        void moveDecors(float x, float y);
     
     /*************/
     /* ACCESSEUR */
@@ -62,13 +67,16 @@ class Affichage
         Texture backgroundTexture;
         Sprite background;
         Texture sol;
-        Sprite solSprite;
+        vector<Sprite> solSprite;
         Texture mur;
         Sprite murSprite;
         Texture toi;
         Sprite toiSprite;
         Texture sdf;
         Sprite sdfSprite;
+
+        vector<Texture> maisonTextures;
+        vector<Sprite> maisonSprites;
 
 }; // class Affichage
 
