@@ -8,12 +8,8 @@ Affichage::Affichage()
 
     // Créer les boutons
     ignoreButton = RectangleShape(Vector2f(200, 50));
-    ignoreButton.setFillColor(Color::Red);
+    ignoreButton.setFillColor(Color(200, 0, 0, 255));
     ignoreButton.setPosition(Vector2f(300, 500));
-
-    helpButton = RectangleShape(Vector2f(200, 50));
-    helpButton.setFillColor(Color::Green);
-    helpButton.setPosition(Vector2f(500, 500));
 
     // Créer le texte
     if (!font.loadFromFile("arial_mt_black/ARIBL0.ttf"))
@@ -21,27 +17,25 @@ Affichage::Affichage()
         exit(1);
     }
 
-    ignoreText = Text("Ignorer", font, 30);
+    ignoreText = Text("MUDA", font, 30);
     ignoreText.setPosition(Vector2f(355, 505));
     ignoreText.setFillColor(Color::White);
-
-    helpText = Text("Aider", font, 30);
-    helpText.setPosition(Vector2f(550, 505));
-    helpText.setFillColor(Color::White);
 
     gameOverText = Text();
     gameOverText.setFont(font);
     gameOverText.setCharacterSize(50);
     gameOverText.setPosition(Vector2f(250, 300));
     gameOverText.setFillColor(Color::White);
+    gameOverText.setString("GAME OVER");
 
     // Créer la barre de vie
+    karma = 1;
     karmaBar = RectangleShape(Vector2f(100, 25));
-    karmaBar.setFillColor(Color::Green);
-    karmaBar.setPosition(Vector2f(25, 25));
+    karmaBar.setSize(Vector2f(karma * 2, 20));
+    karmaBar.setFillColor(Color(255 - karma * 2.55, karma * 2.55, 0));
 
     // Image de fond
-    if (!backgroundTexture.loadFromFile("background.png"))
+    if (!backgroundTexture.loadFromFile("background.jpg"))
     {
         exit(1);
     }
@@ -84,7 +78,7 @@ Affichage::Affichage()
         exit(1);
     }
     sdfSprite = Sprite(sdf);
-    sdfSprite.setPosition(Vector2f(0, 0));
+    sdfSprite.setPosition(Vector2f(LARGEUR_FENETRE - 500, 100));
     sdfSprite.setScale(Vector2f(0, 0));
     
     string nomFichier;
@@ -159,20 +153,97 @@ void Affichage::afficherMenu()
 
 void Affichage::afficherGameOver()
 {
+    bool isGameOverOpen = true;
+    RectangleShape bouttonQuit = RectangleShape(Vector2f(200, 50));
+    bouttonQuit.setFillColor(Color::Red);
+    bouttonQuit.setPosition(Vector2f(150, 500));
+
+    // boutton retry
+    RectangleShape bouttonRetry = RectangleShape(Vector2f(200, 50));
+    bouttonRetry.setFillColor(Color::Green);
+    bouttonRetry.setPosition(Vector2f(350, 500));
+
+    
+    Text quitText = Text("Quit", font, 30);
+    quitText.setPosition(Vector2f(205, 505));
+    quitText.setFillColor(Color::White);
+
+    Text retryText = Text("Retry", font, 30);
+    retryText.setPosition(Vector2f(405, 505));
+    retryText.setFillColor(Color::White);
+
+    Texture backgroundHellTexture;
+    if (!backgroundHellTexture.loadFromFile("backgroundEnfer.png"))
+    {
+        exit(1);
+    }
+    Sprite backgroundHell = Sprite(backgroundHellTexture);
+    backgroundHell.setPosition(Vector2f(-100, 0));
+    backgroundHell.setScale(Vector2f(0.3, 0.3));
+
     // Afficher le Game Over
-    while (window->isOpen())
+    while (isGameOverOpen)
     {
         Event event;
         while (window->pollEvent(event))
         {
             if (event.type == Event::Closed)
             {
+                isGameOverOpen = false;
                 window->close();
             }
         }
 
+        if (event.type == Event::MouseButtonPressed)
+        {
+            if (event.mouseButton.button == Mouse::Left)
+            {
+                if (bouttonQuit.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+                {
+                    isGameOverOpen = false;
+                    window->close();
+                }
+            }
+        }
+
+        if (event.type == Event::MouseButtonPressed)
+        {
+            if (event.mouseButton.button == Mouse::Left)
+            {
+                if (bouttonRetry.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+                {
+                    toiSprite.setPosition(Vector2f(LARGEUR_FENETRE / 2 - 95, solSprite[0].getPosition().y - 95));
+                    // reset position maison
+                    maisonSprites[0].setPosition(Vector2f(-100, solSprite[0].getPosition().y - 550));
+                    maisonSprites[1].setPosition(Vector2f(800, solSprite[0].getPosition().y - 150));
+                    maisonSprites[2].setPosition(Vector2f(1600, solSprite[0].getPosition().y - 200));
+                    maisonSprites[3].setPosition(Vector2f(2400, solSprite[0].getPosition().y - 300));
+                    maisonSprites[4].setPosition(Vector2f(3200, solSprite[0].getPosition().y - 350));
+
+                    // reset position terrain
+                    for (int i = 0; i < 5; i++)
+                    {
+                        solSprite[i].setPosition(Vector2f(i * 800, 400));
+                    }
+
+                    // reset position background
+                    background.setPosition(Vector2f(0, 0));
+
+                    // reset karma
+                    karma = 1;
+
+                    isGameOverOpen = false;
+                }
+            }
+        }
+
         window->clear();
+        window->draw(backgroundHell);
         window->draw(gameOverText);
+        window->draw(bouttonQuit);
+        window->draw(bouttonRetry);
+        window->draw(quitText);
+        window->draw(retryText);
         window->display();
     }
 }
@@ -198,7 +269,6 @@ void Affichage::afficherTerrainDeJeu()
     background.setScale(Vector2f(1, 1));
     murSprite.setScale(Vector2f(1, 1));
     toiSprite.setScale(Vector2f(1, 1));
-    sdfSprite.setScale(Vector2f(1, 1));
 
     for (unsigned int i = 0; i < solSprite.size(); i++)
     {
@@ -287,15 +357,23 @@ void Affichage::afficherTerrainDeJeu()
             {
                 isSDFMenuOpen = true;
             }
-            else if (toiSprite.getGlobalBounds().intersects(maisonSprites[0].getGlobalBounds()) ||
-                toiSprite.getGlobalBounds().intersects(maisonSprites[1].getGlobalBounds()) ||
-                toiSprite.getGlobalBounds().intersects(maisonSprites[2].getGlobalBounds()) ||
-                toiSprite.getGlobalBounds().intersects(maisonSprites[3].getGlobalBounds()) ||
-                toiSprite.getGlobalBounds().intersects(maisonSprites[4].getGlobalBounds()))
+            else 
             {
-                // Afficher message indicant que le sdf n'est pas dans ce bâtiment
-                isTextShown = true;
-                time = clock.getElapsedTime().asMilliseconds();
+                for (int i = 0; i < 5; i++)
+                {
+                    if (toiSprite.getGlobalBounds().intersects(maisonSprites[i].getGlobalBounds()))
+                    {
+                        // Afficher message indicant que le sdf n'est pas dans ce bâtiment
+                        isTextShown = true;
+                        time = clock.getElapsedTime().asMilliseconds();
+
+                        // Reset random
+                        int maisonActuelle = i;
+                        random = rand() % 5;
+                        while (maisonActuelle == random)
+                            random = rand() % 5;
+                    }
+                }
             }
         }
 
@@ -314,10 +392,15 @@ void Affichage::afficherTerrainDeJeu()
         */
 
         window->clear();
-        //window->draw(background);
+        window->draw(background);
         //window->draw(murSprite);
         //window->draw(sdfSprite);
         //window->draw(karmaBar);
+
+        for (unsigned int i = 0; i < solSprite.size(); i++)
+            window->draw(solSprite[i]);
+        for (unsigned int i = 0; i < maisonSprites.size(); i++)
+            window->draw(maisonSprites[i]);
 
         if (isTextShown)
         {
@@ -333,11 +416,6 @@ void Affichage::afficherTerrainDeJeu()
             }
         }
 
-        for (unsigned int i = 0; i < solSprite.size(); i++)
-            window->draw(solSprite[i]);
-        for (unsigned int i = 0; i < maisonSprites.size(); i++)
-            window->draw(maisonSprites[i]);
-
         window->draw(toiSprite);
         window->display();
     }
@@ -345,18 +423,76 @@ void Affichage::afficherTerrainDeJeu()
 
 void Affichage::afficherSDFMenu()
 {
+    srand (time(NULL));
     bool isGameOverOpen = false;
-
+    bool isMUDAAAAAAAAAAPlayed = false;
+    bool isWilhemPlayed = false;
 
     // Jouer le son
-    SoundBuffer buffer;
-    if (!buffer.loadFromFile("Cyberpunk 2077 music.wav"))
+    SoundBuffer bufferCyber;
+    SoundBuffer MUDA;
+    SoundBuffer MUDAAAAAAAAAA;
+    SoundBuffer bufferWilhelm;
+    SoundBuffer bufferBruitCoup[3];
+    if (!bufferCyber.loadFromFile("Cyberpunk 2077 music.wav"))
     {
         exit(1);
     }
-    Sound sound;
-    sound.setBuffer(buffer);
-    sound.play();
+    if (!MUDA.loadFromFile("MUDA.wav"))
+    {
+        exit(1);
+    }
+    if (!MUDAAAAAAAAAA.loadFromFile("MUDAAAAAAAAAA.wav"))
+    {
+        exit(1);
+    }
+    if (!bufferWilhelm.loadFromFile("Wilhelm.wav"))
+    {
+        exit(1);
+    }
+    if (!bufferBruitCoup[0].loadFromFile("bruitCoup0.wav"))
+    {
+        exit(1);
+    }
+    if (!bufferBruitCoup[1].loadFromFile("bruitCoup1.wav"))
+    {
+        exit(1);
+    }
+    if (!bufferBruitCoup[2].loadFromFile("bruitCoup2.wav"))
+    {
+        exit(1);
+    }
+    Sound soundCyber;
+    Sound soundMUDA;
+    Sound soundMUDAAAAAAAAAA;
+    Sound soundWilhelm;
+    Sound soundBruitCoups[3];
+    soundCyber.setBuffer(bufferCyber);
+    soundMUDA.setBuffer(MUDA);
+    soundMUDAAAAAAAAAA.setBuffer(MUDAAAAAAAAAA);
+    soundWilhelm.setBuffer(bufferWilhelm);
+    soundBruitCoups[0].setBuffer(bufferBruitCoup[0]);
+    soundBruitCoups[1].setBuffer(bufferBruitCoup[1]);
+    soundBruitCoups[2].setBuffer(bufferBruitCoup[2]);
+
+    soundMUDA.setVolume(100);
+    soundMUDAAAAAAAAAA.setVolume(100);
+    soundWilhelm.setVolume(100);
+    soundBruitCoups[0].setVolume(10);
+    soundBruitCoups[1].setVolume(10);
+    soundBruitCoups[2].setVolume(10);
+    soundCyber.play();
+    soundCyber.setLoop(true);
+    soundCyber.setVolume(50);
+
+    Clock clock;
+    
+    Text karmaText = Text("Karma : " + to_string(karma), font, 30);
+    karmaText.setPosition(Vector2f(50, 50));
+    karmaText.setFillColor(Color::White);
+
+    sdfSprite.setScale(Vector2f(0.1, 0.1));
+    
     // Afficher le menu SDF
     while (!isGameOverOpen)
     {
@@ -368,47 +504,76 @@ void Affichage::afficherSDFMenu()
                 isGameOverOpen = true;
                 window->close();
             }
-            if (event.type == Event::MouseButtonPressed)
+
+            if (event.type == Event::MouseButtonPressed && karma < 100)
             {
                 if (event.mouseButton.button == Mouse::Left)
                 {
-                    if (ignoreButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+                    ignoreButton.setFillColor(Color(180, 0, 0, 255));
+                    if (ignoreButton.getGlobalBounds().contains(Vector2f(event.mouseButton.x, event.mouseButton.y)))
                     {
-                        karma -= 10;
-                        afficherTerrainDeJeu();
-                    }
-                    if (helpButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-                    {
-                        karma += 10;
-                        afficherTerrainDeJeu();
+                        int random = rand() % 3;
+                        karma += 2;
+                        soundMUDA.play();
+                        soundBruitCoups[random].play();
+                        sdfSprite.setColor(Color(255, 0, 0, 255));
                     }
                 }
             }
+            else
+            {
+                ignoreButton.setFillColor(Color(255, 0, 0, 255));
+                sdfSprite.setColor(Color(255, 255, 255, 255));
+            }
         }
 
+        if (clock.getElapsedTime().asMilliseconds() > 200 && karma < 100)
+        {
+            karma -= 1;
+            clock.restart();
+        }
+
+        if (karma >= 100 && clock.getElapsedTime().asMilliseconds() > 500)
+        {
+            if (clock.getElapsedTime().asMilliseconds() > 3500)
+            {
+                isGameOverOpen = true;
+            }
+            if (clock.getElapsedTime().asMilliseconds() > 1500 && !isWilhemPlayed)
+            {
+                soundWilhelm.play();
+                isWilhemPlayed = true;
+            }
+            if (!isMUDAAAAAAAAAAPlayed)
+            {
+                soundMUDAAAAAAAAAA.play();
+                isMUDAAAAAAAAAAPlayed = true;
+            }
+        }
+
+        karmaText.setString("Karma : " + to_string(karma));
+
+        afficherKarmaBar();
+
         window->clear();
+        window->draw(sdfSprite);
         window->draw(ignoreButton);
         window->draw(ignoreText);
-        window->draw(helpButton);
-        window->draw(helpText);
+        window->draw(karmaBar);
+        window->draw(karmaText);
         window->display();
     }
 }
 
 void Affichage::afficherKarmaBar()
 {
-    Event event;
-    while (window->pollEvent(event))
-    {
-        if (event.type == Event::Closed)
-        {
-            window->close();
-        }
-    }
-
-    window->clear();
-    window->draw(karmaBar);
-    window->display();
+    // gestion karma bar
+    if (karma < 0)
+        karma = 0;
+    if (karma > 100)
+        karma = 100;
+    karmaBar.setSize(Vector2f(karma * 8, 20));
+    karmaBar.setFillColor(Color(255 - karma * 2.55, karma * 2.55, 0));
 }
 
 void Affichage::moveDecors(float x, float y)
@@ -423,7 +588,5 @@ void Affichage::moveDecors(float x, float y)
         maisonSprites[i].move(x, y);
     }
 
-    //murSprite.move(x, y);
-    //toiSprite.move(x, y);
-    //sdfSprite.move(x, y);
+    background.move((int)x % 4, y);
 }

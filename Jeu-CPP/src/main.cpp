@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 
-int karma = 100;
+int karma = 1;
 
 int main()
 {
@@ -24,7 +24,8 @@ int main()
         else if (sdfMenu)
         {
             affichage.afficherSDFMenu();
-            sdfMenu = false;
+            sdfMenu  = false;
+            gameOver = true;
         }
         else if (gameOver)
         {

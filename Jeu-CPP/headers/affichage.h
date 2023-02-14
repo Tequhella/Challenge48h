@@ -54,12 +54,10 @@ class Affichage
     /************/
     /* ATTRIBUTS */
     /************/
-        int karma;
+        float karma;
         RenderWindow* window;
         RectangleShape ignoreButton;
-        RectangleShape helpButton;
         Text ignoreText;
-        Text helpText;
         Text gameOverText;
         Font font;
         RectangleShape karmaBar;
