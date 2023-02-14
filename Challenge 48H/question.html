@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="question.css">
+</head>
+<body class="milieu">
+    <form class = "box-hover" action="">
+        <p>Le Bourreau vous a donné une liste de personnes qu'il doit exécuter à vous de choisir <br>(Vous devez avoir une case cochée par ligne)<br> Bonne Chance !</p>
+        <div class="center">
+            <pre><p>Ta mère</p></pre>
+            <input  type="checkbox" id="check1" onclick="RandomCheck(this)">
+            <input  type="checkbox" id="check2" onclick="RandomCheck(this)">
+            <pre><p>Un tueur</p></pre>
+        </div>
+        <div class="center">
+            <pre><p>10 Inconnus</p></pre>
+            <input type="checkbox" id="check3" onclick="RandomCheck(this)">
+            <input type="checkbox" id="check4" onclick="RandomCheck(this)">
+            <pre><p>     Ton père</p></pre>
+        </div>
+        <div class="center">
+            <pre><p>BF        </p></pre>
+            <input type="checkbox" id="check5" onclick="RandomCheck(this)">
+            <input type="checkbox" id="check6" onclick="RandomCheck(this)">
+            <pre><p>Tonton</p></pre>
+        </div>
+        <div class="center">
+            <pre><p>Tonton</p></pre>
+            <input type="checkbox" id="check7" onclick="RandomCheck(this)">
+            <input type="checkbox" id="check8" onclick="RandomCheck(this)">
+            <pre><p>Tonton</p></pre>
+        </div>
+        <div>
+            <input type="button" class="Nonbutton" onclick="showModal(this)" value="Valider" id="Bvalid">
+        </div>
+    </form>
+
+    <div class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal()">&times;</span>
+        <p>Etes-vous vraiment sûr de vouloir executer les personnes chosies?</p>
+        <div>
+            <input type="button" value="Oui" id="Bvalidoui" onclick="showModal(this)">
+            <input type="button" value="Non" onclick="hideModal()" id="Bvalid">
+        </div>
+    </div>
+    </div>
+    <div class="modal2">
+    <div class="modal-content2">
+        <span class="close" onclick="hideModal()">&times;</span>
+        <p>Après avoir réalisé tous ces services, vous vous rendez compte que chacun de ces services ont en réalité uniquement mener à des mauvaises actions, et que le sans-abri est en fait satan. Bien décidé à le retrouver, vous partez à sa recherche dans la ville. <br><br>(Allez chercher dans les dossiers personnels du pc)</p>
+    </div>
+    </div>
+</body>
+<script src="question.js"></script>
+</html>

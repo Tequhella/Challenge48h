@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="menu">
+        <h1>L'énigme des boutons !</h1>
+        <h2>N'oublier surtout pas les règles</h2>
+        <h3>Trouve l'accès parmi ces boutons (en cliquant dessus bien sûr)</h3>
+        <div class="button-find">
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer" id="soluce-button"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+            <button class="entrer"></button>
+        </div>
+    </div>
+    <div class="contenu">
+        <div class="articles">
+            <h2 class="titre">"The Barred Times"</h2>
+            <h3 class="sous-titre">Evadé</h3>
+            <div class="contenu-article">
+            <p class="text1-article">
+                Un prisonnier s'est évadé de sa prison grâce à une carte du labyrinthe de la prison. La peine était pour vol à main armée, mais il a utilisé son intelligence pour échapper à la garde. Maintenant en cavale, il espère éviter une peine encore plus lourde s'il est capturé. Le prisonnier a travaillé pendant des mois pour obtenir la carte en observant attentivement les mouvements des gardes et les points d'accès. Sa détermination et son courage ont payé, mais il sait qu'il ne peut pas vivre éternellement dans la clandestinité.
+            </p>
+            <img class="labyrinthe" src="https://picsum.photos/200/300" alt="labyrinthe">
+        </div>
+        <p class="text2-article">
+            La prison dont le prisonnier s'est échappé était un établissement pénitentiaire de haute sécurité. Elle était construite en béton armé, entourée de murs de 6 mètres de haut et surveillée en permanence par des caméras de sécurité. Les cellules étaient équipées de lits superposés en acier, d'un lavabo et d'une toilette en acier inoxydable, ainsi que d'un éclairage tamisé en permanence.
+        </p>
+        </div>
+    <header>
+        <h2>Pour résoudre l'énigme vous aurez besoin d'ouvrir tous les bureaux et de trouver le bouton vert !</h2>
+        <h3>Un mot de passe est caché quelque part</h3>
+        <div class="position_timer">
+            <div id="timer"></div>
+        </div>
+    </header>
+    <nav class="top-bar">
+        <div id="bur-1">
+            <a href="#">Bureau 1</a>
+        </div>
+        <div class="bare" id="bur-2">
+            <a href="#">Bureau 2</a>
+        </div>
+        <div class="bare" id="bur-3">
+            <a href="#">Bureau 3</a>
+        </div>
+        <div class="bare" id="bur-4">
+            <a href="#">Bureau 4</a>
+        </div>
+        <div class="bare" id="bur-5">
+            <a href="#">Bureau 5</a>
+        </div>
+        <div class="bare" id="bur-6">
+            <a href="#">Bureau 6</a>
+        </div>
+        <div id="soluce-click">
+            <a href="#">Bureau 7</a>
+        </div>
+        <div class="bare" id="bur-8">
+            <a href="#">Bureau 8</a>
+        </div>
+        <div class="bare" id="bur-9">
+            <a href="#">Bureau 9</a>
+        </div>
+        <div class="bare" id="bur-10">
+            <a href="#">Bureau 10</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+        <div class="paper"></div>
+      </div>
+      <button id="unique-button">Accéder à la page suivante</button>
+    <button id="valide-button">Trouve moi !</button>
+    <div class="inputBox">
+        <span class="password">Mot de passe</span>
+        <input id="log-input" type="text"/>
+    </div>
+    <div class="box-text">
+        <h4>Dans l'un des bureaux de 6 à 10 tu pourras accéder à la suite.</h4>
+        <h5>Bonne recherche !</h5>
+    </div>
+    <div class="button-indice">
+        <button id="give-indice">Indice</button>
+    </div>
+</div>
+    <script src="app.js"></script>
+</body>
+</html>
