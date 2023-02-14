@@ -179,11 +179,21 @@ void Affichage::afficherGameOver()
 
 void Affichage::afficherTerrainDeJeu()
 {
-    bool isSDFMenuOpen = false;
+    srand(time(NULL));
+    bool isSDFMenuOpen  = false;
+    bool isTextShown    = false;
     int toiSpritePositionX = 0;
     int toiSpritePositionY = 0;
+    int random = rand() % 5;
     Clock clock;
-    Time time;
+    Int32 time  = 0;
+    Int32 time2 = 0;
+    Int32 time3 = 0;
+    Int32 time4 = 0;
+    Text sdfText = Text("Le SDF n'est pas dans cette maison...", font, 30);
+    sdfText.setPosition(Vector2f(100, 100));
+    sdfText.setFillColor(Color::White);
+    sdfText.setScale(Vector2f(0, 0));
 
     background.setScale(Vector2f(1, 1));
     murSprite.setScale(Vector2f(1, 1));
@@ -222,48 +232,76 @@ void Affichage::afficherTerrainDeJeu()
         {
             if (toiSprite.getPosition().x >= maisonSprites[0].getGlobalBounds().left + maisonSprites[0].getGlobalBounds().width)
             {
+                time2 = (time2 == 0) ? clock.getElapsedTime().asMilliseconds() : time2;
                 if (toiSprite.getScale().x == -1)
                     toiSprite.setPosition(Vector2f(toiSprite.getPosition().x - 144, toiSprite.getPosition().y));
                 toiSprite.setScale(Vector2f(1, 1));
                 toiSpritePositionY = 2;
                 moveDecors(5, 0);
-                if (clock.getElapsedTime().asMilliseconds() > 100)
+                if (clock.getElapsedTime().asMilliseconds() - time2 > 100)
                 {
                     toiSpritePositionX++;
                     toiSpritePositionX %= 6;
-                    clock.restart();
+                    time2 = 0;
                 }
             }
         }
-        if (Keyboard::isKeyPressed(Keyboard::Right))
+        else if (Keyboard::isKeyPressed(Keyboard::Right))
         {
             if (toiSprite.getPosition().x <= maisonSprites[4].getGlobalBounds().left)
             {
+                time3 = (time3 == 0) ? clock.getElapsedTime().asMilliseconds() : time3;
                 if (toiSprite.getScale().x == 1)
                     toiSprite.setPosition(Vector2f(toiSprite.getPosition().x + 144, toiSprite.getPosition().y));
                 toiSprite.setScale(Vector2f(-1, 1));
                 toiSpritePositionY = 2;
                 moveDecors(-5, 0);
-                if (clock.getElapsedTime().asMilliseconds() > 100)
+                if (clock.getElapsedTime().asMilliseconds() - time3 > 100)
                 {
                     toiSpritePositionX++;
                     toiSpritePositionX %= 6;
-                    clock.restart();
+                    time3 = 0;
                 }
             }
         }
-
-        if (clock.getElapsedTime().asMilliseconds() > 100)
+        else
         {
-            toiSpritePositionX = 0;
-            toiSpritePositionY = 0;
-            clock.restart();
+            time4 = (time4 == 0) ? clock.getElapsedTime().asMilliseconds() : time4;
+            if (clock.getElapsedTime().asMilliseconds() - time4 > 100)
+            {
+                toiSpritePositionX = 0;
+                toiSpritePositionY = 0;
+                time4 = 0;
+            }
         }
+        
 
         // Gestion de l'animation de Toi
         toiSprite.setTextureRect(IntRect(toiSpritePositionX * 144, toiSpritePositionY * 144, 144, 144));
 
+        
+        // Interaction avec les maisons
+        if (Keyboard::isKeyPressed(Keyboard::Space))
+        {
+            if (toiSprite.getGlobalBounds().intersects(maisonSprites[random].getGlobalBounds()))
+            {
+                isSDFMenuOpen = true;
+            }
+            else if (toiSprite.getGlobalBounds().intersects(maisonSprites[0].getGlobalBounds()) ||
+                toiSprite.getGlobalBounds().intersects(maisonSprites[1].getGlobalBounds()) ||
+                toiSprite.getGlobalBounds().intersects(maisonSprites[2].getGlobalBounds()) ||
+                toiSprite.getGlobalBounds().intersects(maisonSprites[3].getGlobalBounds()) ||
+                toiSprite.getGlobalBounds().intersects(maisonSprites[4].getGlobalBounds()))
+            {
+                // Afficher message indicant que le sdf n'est pas dans ce bâtiment
+                isTextShown = true;
+                time = clock.getElapsedTime().asMilliseconds();
+            }
+        }
+
+
         // Gestion de la barre de vie
+        /*
         if (karmaBar.getSize().x > 0)
         {
             karmaBar.setSize(Vector2f(karmaBar.getSize().x - 0.0001, karmaBar.getSize().y));
@@ -273,12 +311,27 @@ void Affichage::afficherTerrainDeJeu()
             isSDFMenuOpen = true;
             afficherGameOver();
         }
+        */
 
         window->clear();
         //window->draw(background);
         //window->draw(murSprite);
         //window->draw(sdfSprite);
-        window->draw(karmaBar);
+        //window->draw(karmaBar);
+
+        if (isTextShown)
+        {
+            sdfText.setScale(Vector2f(1, 1));
+            // Disparition du texte sur 2 secondes
+            sdfText.setFillColor(Color(255, 255, 255, 255 - (clock.getElapsedTime().asMilliseconds() - time) / 8));
+            window->draw(sdfText);
+            
+            if (clock.getElapsedTime().asMilliseconds() - time > 2000)
+            {
+                isTextShown = false;
+                sdfText.setScale(Vector2f(0, 0));
+            }
+        }
 
         for (unsigned int i = 0; i < solSprite.size(); i++)
             window->draw(solSprite[i]);

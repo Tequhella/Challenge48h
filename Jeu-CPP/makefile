@@ -13,7 +13,7 @@ obj/%.o : src/%.cpp $(HEADERS)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 packages :
-	sudo apt-get install libsfml-dev
+	sudo apt-get install libsfml-dev -y
 
 clean : 
 	rm -f obj/*.o Challenge48h
