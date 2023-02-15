@@ -1,0 +1,7 @@
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/Challenge48h.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/obj.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/packages.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/check.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/clean-all.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/edit_cache.dir
+/home/lilianbestial/Documents/VScode/Challenge48h/Jeu-CPP/CMakeFiles/rebuild_cache.dir
