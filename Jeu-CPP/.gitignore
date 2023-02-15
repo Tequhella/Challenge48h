@@ -1,2 +1,7 @@
 obj/
 Challenge48h
+
+CMake_install.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
